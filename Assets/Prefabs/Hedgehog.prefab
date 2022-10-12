@@ -238,6 +238,6 @@ MonoBehaviour:
   target: {fileID: 0}
   speed: 15
   velocity: {x: 0, y: 0}
-  nextWaypointDistance: 0.1
+  nextWaypointDistance: 0.3
   enemyCollider: {fileID: 0}
   bridgeColliders: {fileID: 0}

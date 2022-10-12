@@ -42,7 +42,7 @@ public class EnemyAI : Enemy
     private void UpdatePath()
     {
         if (seeker.IsDone())
-            seeker.StartPath(rb.transform.position - new Vector3(0, 0.15f, 0), target.transform.position, OnPathCompleted);
+            seeker.StartPath(rb.transform.position, target.transform.position, OnPathCompleted);
     }
     private void OnPathCompleted(Path p)
     {

@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public int hitpoint;
     public int maxHitpoint;
     public int enemyScore;
+    private bool isDead;
 
     // Immunity
     [Header("Immunity")]
@@ -61,13 +62,18 @@ public class Enemy : MonoBehaviour
     }
     public void Death()
     {
+        isDead = true;
         ScoreManager.instance.score += enemyScore;
         enemyAnimator.SetTrigger("died");
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 0.5f);
     }
     public void TouchedFarm()
     {
-        enemyAnimator.SetTrigger("touchedFarm");
-        Destroy(gameObject, 1f);
+        if (!isDead)
+        {
+            enemyAnimator.SetTrigger("touchedFarm");
+            ScoreManager.instance.FarmInvaded();
+            Destroy(gameObject, 1f);
+        }
     }
 }

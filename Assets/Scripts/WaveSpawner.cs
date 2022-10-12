@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
 {
-
+    
     // Enemies Info
     [Header("Enemies Info")]
     public List<SpawnEnemy> enemies = new List<SpawnEnemy>();
-    public List<GameObject> enemiesToSpawn = new List<GameObject>();    
+    public List<GameObject> enemiesToSpawn = new List<GameObject>();
     public List<GameObject> spawnedEnemies = new List<GameObject>();
 
     // Wave Info
@@ -21,10 +21,9 @@ public class WaveSpawner : MonoBehaviour
     // Wave Logic
     [Header("Wave Logic")]
     public int waveDuration;
-    public bool pauseSpawner = true;
     public float waveTimer;
-    private float spawnInterval;
-    private float spawnTimer;
+    public float spawnInterval;
+    public float spawnTimer;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -55,8 +54,9 @@ public class WaveSpawner : MonoBehaviour
             ScoreManager.instance.UpdateHUD();
         }
 
-        if (waveTimer <= 0 && spawnedEnemies.Count <= 0)
+        if (waveTimer <= 0 && enemiesToSpawn.Count <= 0)
         {
+            spawnedEnemies.Clear();
             currWave++;
             ScoreManager.instance.UpdateHUD();
             GenerateWave();
@@ -65,27 +65,23 @@ public class WaveSpawner : MonoBehaviour
 
     public void GenerateWave()
     {
+
+        waveValue = currWave * 10;
+
         if(currWave < 5)
-        {
-            waveValue = currWave * 15;
-            waveDuration = 30;
-        }
+            waveDuration = 40;
         else if(currWave >= 5)
-        {
-            waveValue = currWave * 12;
             waveDuration = 60;
-        }
         else if(currWave >= 10)
-        {
-            waveValue = currWave * 10;
-            waveDuration = 80;
-        }
-        ScoreManager.instance.UpdateHUD();
+            waveDuration = 90;
+
         GenerateEnemies();
 
         spawnInterval = waveDuration / enemiesToSpawn.Count; // gives a fixed time between each enemies
         waveTimer = waveDuration; // wave duration is read only
+        ScoreManager.instance.UpdateHUD();
     }
+
     public void GenerateEnemies()
     {
         // Create a temporary list of enemies to generate
@@ -104,13 +100,13 @@ public class WaveSpawner : MonoBehaviour
 
             int randEnemyId;
 
-            if (currWave < 5)
+            if(currWave < 5)
                 randEnemyId = Random.Range(0, enemies.Count - 2);
-            else if(currWave < 8)
+            else if(currWave >= 5 && currWave < 8)
                 randEnemyId = Random.Range(0, enemies.Count - 1);
             else
                 randEnemyId = Random.Range(0, enemies.Count);
-                
+
             int randEnemyCost = enemies[randEnemyId].cost;
 
             if (waveValue - randEnemyCost >= 0)
@@ -126,7 +122,6 @@ public class WaveSpawner : MonoBehaviour
         enemiesToSpawn.Clear();
         enemiesToSpawn = generatedEnemies;
     }
-
 }
 
 [System.Serializable]
